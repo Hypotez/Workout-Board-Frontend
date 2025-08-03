@@ -1,11 +1,14 @@
 "use client"
 
+/*
 import { useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+*/
 
 export function LoginForm() {
+  /*
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -14,8 +17,11 @@ export function LoginForm() {
     console.log("Email:", email)
     console.log("Password:", password)
   }
+  */
 
-  return (
+  return
+    /*
+    (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto mt-10 p-6 border rounded-xl shadow-md bg-background">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -41,5 +47,6 @@ export function LoginForm() {
       </div>
       <Button type="submit" className="w-full">Login</Button>
     </form>
-  )
+    )
+    */
 }
