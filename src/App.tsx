@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { Layout } from "@/components/layout"
 import { usePageTitle } from "@/hooks/use-page-title"
 import { ROUTES } from "@/config/routes"
+import { ThemeProvider } from "@/components/darkmode/theme-provider"
+
 
 function AppContent() {
   const pageTitle = usePageTitle()
@@ -12,19 +14,21 @@ function AppContent() {
     document.title = `${pageTitle} - Workout Board`
   }, [pageTitle])
 
-  return (
-    <Layout>
-      <Routes>
-        {ROUTES.map((route) => (
-          <Route 
-            key={route.path}
-            path={route.path} 
-            element={<route.component />}
-          />
-        ))}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </Layout>
+  return (  
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Layout>
+        <Routes>
+          {ROUTES.map((route) => (
+            <Route 
+              key={route.path}
+              path={route.path} 
+              element={<route.component />}
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Layout>
+    </ThemeProvider>
   )
 }
 
