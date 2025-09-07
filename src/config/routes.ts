@@ -1,9 +1,8 @@
 import { type ComponentType } from "react"
-import { Bot, LayoutDashboard, Settings } from "lucide-react"
+import { Bot, LayoutDashboard } from "lucide-react"
 
 import Dashboard from "@/pages/dashboard"
 import Ai from "@/pages/ai"
-import SettingsPage from "@/pages/settings"
 
 type RouteCategory = 'main' | 'footer'
 
@@ -32,13 +31,6 @@ export const ROUTES: RouteConfig[] = [
     icon: Bot, 
     component: Ai,
     category: categoryMain
-  },
-  {
-    path: "/settings",
-    title: "Settings",
-    icon: Settings,
-    component: SettingsPage,
-    category: categoryFooter
   }
 ]
 

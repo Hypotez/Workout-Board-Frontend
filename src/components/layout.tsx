@@ -1,4 +1,7 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar"
+
+import { SettingsPopup } from "@/components/settings"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -44,7 +47,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* Add the dark mode toggle to the right side */}
             <div className="flex items-center gap-4">
               <ModeToggle />
+              <SettingsPopup  />
             </div>
+            
           </header>
           {children}
         </main>
