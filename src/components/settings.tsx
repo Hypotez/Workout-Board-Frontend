@@ -9,7 +9,7 @@ export function SettingsPopup() {
   }
 
   return (
-    <Button variant="outline" size="icon" onClick={clickSettings} >
+    <Button variant="outline" size="icon" onClick={clickSettings} className="cursor-pointer hover:cursor-pointer" >
       <Settings />
     </Button>
   )
