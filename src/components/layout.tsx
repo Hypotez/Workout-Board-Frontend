@@ -2,6 +2,8 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar"
 
 import { SettingsPopup } from "@/components/settings"
 
+import { Button } from "@/components/ui/button"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,7 +31,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <main className="flex flex-1 flex-col">
           <header className="flex h-16 items-center justify-between border-b px-6">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="cursor-pointer hover:cursor-pointer" />
+              <Button variant="outline" size="icon" className="cursor-pointer hover:cursor-pointer" asChild>
+                <SidebarTrigger/>
+              </Button>
               <Separator orientation="vertical" className="h-6" />
               <Breadcrumb>
                 <BreadcrumbList>
