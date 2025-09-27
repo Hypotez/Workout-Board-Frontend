@@ -1,40 +1,54 @@
-### Project
+# Project
 
-A web application powered by React, TypeScript, Vite, and styled with ShadCN UI.
+A web application powered by **React**, **TypeScript**, **Vite**, and styled with **ShadCN UI**.
 
-#### Setup
+## Setup
 
-- npm install
-- Rename .env.template to .env and change the variables.
+```bash
+npm install
+Rename .env.template to .env and change the variables.
+```
 
-##### Development
+### Development
 
 Start the development server with hot reload:
 
-- npm run dev
+```bash
+npm run dev
+```
 
-##### Production Build
+### Production Build
 
 Compile TypeScript and build the production bundle:
 
-- npm run build
+```bash
+npm run build
+```
 
 Preview the production build locally:
 
-- npm run preview
+```bash
+npm run preview
+```
 
-##### Linting and Formatting
+### Linting and Formatting
 
 This project uses Husky to run pre-commit hooks via lint-staged.
 
 Check code for linting errors with ESLint:
 
-- npm run lint
+```bash
+npm run lint
+```
 
 Automatically fix linting issues:
 
-- npm run lint:fix
+```bash
+npm run lint:fix
+```
 
 Format code using Prettier:
 
-- npm run format
+```bash
+npm run format
+```
