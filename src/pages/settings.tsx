@@ -146,7 +146,7 @@ export default function Settings() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent cursor-pointer hover:cursor-pointer"
                     onClick={() => setShowApiKey(!showApiKey)}
                   >
                     {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -162,7 +162,7 @@ export default function Settings() {
             <Button
               onClick={handleSave}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 cursor-pointer hover:cursor-pointer"
             >
               {saved ? (
                 <>

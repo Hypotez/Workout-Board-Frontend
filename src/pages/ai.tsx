@@ -172,8 +172,13 @@ export default function ChatBot() {
                 autoFocus
                 rows={1}
               />
-              <Button onClick={sendMessage} disabled={isLoading} size="icon" className="mb-1">
-                <Send className="h-4 w-4" />
+              <Button
+                onClick={sendMessage}
+                disabled={isLoading}
+                size="icon"
+                className="mb-1 cursor-pointer hover:cursor-pointer"
+              >
+                <Send className="h-4 w-4 " />
               </Button>
             </div>
           </div>
