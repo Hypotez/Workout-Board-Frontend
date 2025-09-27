@@ -14,7 +14,7 @@ interface Message {
     timestamp: Date
 }
 
-export function ChatBot() {
+export default function ChatBot() {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: uuidv4(),
