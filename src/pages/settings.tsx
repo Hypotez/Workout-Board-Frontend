@@ -161,22 +161,22 @@ export default function Settings() {
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-2"
             >
-            {saved ? (
-              <>
-                <Check className="h-4 w-4 animate-pulse" />
-                <span className="animate-pulse">Settings Saved!</span>
-              </>
-            ) : isLoading ? (
-              <>
-                <Save className="h-4 w-4" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4" />
-                Save Settings
-              </>
-            )}
+              {saved ? (
+                <>
+                  <Check className="h-4 w-4 animate-pulse" />
+                  <span className="animate-pulse">Settings Saved!</span>
+                </>
+              ) : isLoading ? (
+                <>
+                  <Save className="h-4 w-4" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Settings
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>
