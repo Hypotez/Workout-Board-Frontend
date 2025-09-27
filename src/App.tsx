@@ -17,7 +17,7 @@ function AppContent() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Layout>
         <Routes>
-          {ROUTES.map((route) => (
+          {Object.values(ROUTES).map((route) => (
             <Route key={route.path} path={route.path} element={<route.component />} />
           ))}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

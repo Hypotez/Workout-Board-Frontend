@@ -14,8 +14,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
-import { Nav } from './nav-sidebar';
-import { getMainRoutes, getFooterRoutes } from '@/config/routes';
+import { NavSidebarIcon } from './nav-sidebar-icon';
+
+import { ROUTES_WITH_ICONS } from '@/config/routes';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { pathname } = useLocation();
@@ -40,8 +41,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <Nav items={getMainRoutes()} currentPath={pathname} />
-        <Nav items={getFooterRoutes()} currentPath={pathname} className="mt-auto" />
+        <NavSidebarIcon
+          items={{
+            dashboard: ROUTES_WITH_ICONS.dashboard,
+            workouts: ROUTES_WITH_ICONS.workouts,
+            routines: ROUTES_WITH_ICONS.routines,
+            ai: ROUTES_WITH_ICONS.ai,
+          }}
+          currentPath={pathname}
+        />
+        <NavSidebarIcon
+          items={{
+            settings: ROUTES_WITH_ICONS.settings,
+          }}
+          currentPath={pathname}
+          className="mt-auto"
+        />
       </SidebarContent>
       <SidebarFooter>
         <Separator className="mb-3" />

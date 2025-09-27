@@ -1,18 +1,18 @@
 import { cn } from '@/lib/utils';
 import { NavLink } from 'react-router-dom';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
-import { type RouteConfig } from '@/config/routes';
+import { type RoutesWithIcon } from '@/config/routes';
 
 interface NavProps {
-  items: RouteConfig[];
+  items: RoutesWithIcon;
   currentPath: string;
   className?: string;
 }
 
-export function Nav({ items, currentPath, className }: NavProps) {
+export function NavSidebarIcon({ items, currentPath, className }: NavProps) {
   return (
     <SidebarMenu className={cn('group-data-[collapsible=icon]:items-center', className)}>
-      {items.map((item) => (
+      {Object.values(items).map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton
             asChild

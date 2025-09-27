@@ -7,57 +7,80 @@ import workouts from '@/pages/workouts';
 import routines from '@/pages/routines';
 import settings from '@/pages/settings';
 
-type RouteCategory = 'main' | 'footer';
-
-const categoryMain: RouteCategory = 'main';
-const categoryFooter: RouteCategory = 'footer';
-
-export interface RouteConfig {
+interface RoutesInformation {
   path: string;
   title: string;
-  icon: ComponentType<{ className?: string }>;
   component: ComponentType;
-  category: RouteCategory;
 }
 
-export const ROUTES: RouteConfig[] = [
-  {
+interface RoutesWithIconInformation extends RoutesInformation {
+  icon: ComponentType<{ className: string }>;
+}
+
+export interface Routes {
+  [key: string]: RoutesInformation;
+}
+
+export interface RoutesWithIcon {
+  [key: string]: RoutesWithIconInformation;
+}
+
+export const ROUTES: Routes = {
+  dashboard: {
     path: '/dashboard',
     title: 'Dashboard',
-    icon: LayoutDashboard,
     component: dashboard,
-    category: categoryMain,
   },
-  {
+  workouts: {
     path: '/workouts',
     title: 'Workouts',
-    icon: Zap,
     component: workouts,
-    category: categoryMain,
   },
-  {
+  routines: {
     path: '/routines',
     title: 'Routines',
-    icon: List,
     component: routines,
-    category: categoryMain,
   },
-  {
+  ai: {
     path: '/ai',
     title: 'Ask AI',
-    icon: Bot,
     component: ai,
-    category: categoryMain,
   },
-  {
+  settings: {
     path: '/settings',
     title: 'Settings',
-    icon: Settings,
     component: settings,
-    category: categoryFooter,
   },
-];
+};
 
-export const getMainRoutes = () => ROUTES.filter((route) => route.category === categoryMain);
-export const getFooterRoutes = () => ROUTES.filter((route) => route.category === categoryFooter);
-export const getRouteByPath = (path: string) => ROUTES.find((route) => route.path === path);
+export const ROUTES_WITH_ICONS: RoutesWithIcon = {
+  dashboard: {
+    ...ROUTES.dashboard,
+    icon: LayoutDashboard,
+  },
+  workouts: {
+    ...ROUTES.workouts,
+    icon: Zap,
+  },
+  routines: {
+    ...ROUTES.routines,
+    icon: List,
+  },
+  ai: {
+    ...ROUTES.ai,
+    icon: Bot,
+  },
+  settings: {
+    ...ROUTES.settings,
+    icon: Settings,
+  },
+};
+
+export const getRouteByPath = (path: string) => {
+  for (const key in ROUTES) {
+    if (ROUTES[key].path === path) {
+      return ROUTES[key];
+    }
+  }
+  return undefined;
+};
