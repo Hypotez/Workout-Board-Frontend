@@ -18,7 +18,8 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: uuidv4(),
-      content: "Hi! I'm your workout AI assistant. Ask me anything about your hevy workouts!",
+      content:
+        "Hi! I'm your workousdasdasdasdasdt AI assistant. Ask me anything about your hevy workouts!",
       sender: 'ai',
       timestamp: new Date(),
     },
