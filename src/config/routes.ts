@@ -1,8 +1,11 @@
 import { type ComponentType } from "react"
-import { Bot, LayoutDashboard } from "lucide-react"
+import { Zap, List, Bot, LayoutDashboard, Settings } from "lucide-react"
 
-import Dashboard from "@/pages/dashboard"
-import Ai from "@/pages/ai"
+import dashboard from "@/pages/dashboard"
+import ai from "@/pages/ai"
+import workouts from "@/pages/workouts"
+import routines from "@/pages/routines"
+import settings from "@/pages/settings"
 
 type RouteCategory = 'main' | 'footer'
 
@@ -22,16 +25,37 @@ export const ROUTES: RouteConfig[] = [
     path: "/dashboard",
     title: "Dashboard", 
     icon: LayoutDashboard,
-    component: Dashboard,
+    component: dashboard,
+    category: categoryMain
+  },
+  {
+    path: "/workouts",
+    title: "Workouts",
+    icon: Zap, 
+    component: workouts,
+    category: categoryMain
+  },
+  {
+    path: "/routines",
+    title: "Routines",
+    icon: List, 
+    component: routines,
     category: categoryMain
   },
   {
     path: "/ai",
     title: "Ask AI",
     icon: Bot, 
-    component: Ai,
+    component: ai,
     category: categoryMain
-  }
+  },
+  {
+    path: "/settings",
+    title: "Settings",
+    icon: Settings, 
+    component: settings,
+    category: categoryFooter
+  },
 ]
 
 export const getMainRoutes = () => ROUTES.filter(route => route.category === categoryMain)
