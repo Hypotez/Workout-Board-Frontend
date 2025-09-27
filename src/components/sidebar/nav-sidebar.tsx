@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { NavLink } from "react-router-dom"
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar"
 import { type RouteConfig } from "@/config/routes"
 
@@ -18,10 +19,10 @@ export function Nav({ items, currentPath, className }: NavProps) {
             isActive={currentPath === item.path}
             className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
           >
-            <a href={item.path}>
+            <NavLink to={item.path}>
               <item.icon className="h-4 w-4" />
               <span className="group-data-[collapsible=icon]:sr-only">{item.title}</span>
-            </a>
+            </NavLink>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
