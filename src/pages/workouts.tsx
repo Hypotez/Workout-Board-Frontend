@@ -1,3 +1,3 @@
 export default function Workouts() {
-  return <div></div>
+  return <div></div>;
 }

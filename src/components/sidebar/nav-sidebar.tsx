@@ -1,21 +1,21 @@
-import { cn } from "@/lib/utils"
-import { NavLink } from "react-router-dom"
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar"
-import { type RouteConfig } from "@/config/routes"
+import { cn } from '@/lib/utils';
+import { NavLink } from 'react-router-dom';
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
+import { type RouteConfig } from '@/config/routes';
 
 interface NavProps {
-  items: RouteConfig[]
-  currentPath: string
-  className?: string
+  items: RouteConfig[];
+  currentPath: string;
+  className?: string;
 }
 
 export function Nav({ items, currentPath, className }: NavProps) {
   return (
-    <SidebarMenu className={cn("group-data-[collapsible=icon]:items-center", className)}>
+    <SidebarMenu className={cn('group-data-[collapsible=icon]:items-center', className)}>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton 
-            asChild 
+          <SidebarMenuButton
+            asChild
             isActive={currentPath === item.path}
             className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
           >
@@ -27,5 +27,5 @@ export function Nav({ items, currentPath, className }: NavProps) {
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
-  )
+  );
 }

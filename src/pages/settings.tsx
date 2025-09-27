@@ -1,41 +1,36 @@
-import { useState } from "react"
-import { Eye, EyeOff, Save, Database, Wifi, WifiOff, HelpCircle, Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { useState } from 'react';
+import { Eye, EyeOff, Save, Database, Wifi, WifiOff, HelpCircle, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-type DataSource = "hevy" | "dummy"
+type DataSource = 'hevy' | 'dummy';
 
 export default function Settings() {
-  const [dataSource, setDataSource] = useState<DataSource>("dummy")
-  const [apiKey, setApiKey] = useState("")
-  const [showApiKey, setShowApiKey] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const [dataSource, setDataSource] = useState<DataSource>('dummy');
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const handleSave = async () => {
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
     setTimeout(() => {
-      localStorage.setItem('dataSource', dataSource)
-      
+      localStorage.setItem('dataSource', dataSource);
+
       if (dataSource === 'hevy') {
-        localStorage.setItem('hevyApiKey', apiKey)
+        localStorage.setItem('hevyApiKey', apiKey);
       }
-      
-      setIsLoading(false)
-      setSaved(true)
-      
-      setTimeout(() => setSaved(false), 3000)
-    }, 1000)
-  }
+
+      setIsLoading(false);
+      setSaved(true);
+
+      setTimeout(() => setSaved(false), 3000);
+    }, 1000);
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
@@ -50,47 +45,59 @@ export default function Settings() {
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <Label className="text-base font-medium">Choose your data source:</Label>
-              
-              <div 
+
+              <div
                 className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                  dataSource === 'dummy' 
-                    ? 'border-primary bg-primary/5' 
+                  dataSource === 'dummy'
+                    ? 'border-primary bg-primary/5'
                     : 'border-muted hover:border-muted-foreground/30'
                 }`}
                 onClick={() => setDataSource('dummy')}
               >
                 <div className="flex items-center space-x-3">
-                  <div className={`w-4 h-4 rounded-full border-2 ${
-                    dataSource === 'dummy' ? 'border-primary bg-primary' : 'border-muted-foreground'
-                  }`} />
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 ${
+                      dataSource === 'dummy'
+                        ? 'border-primary bg-primary'
+                        : 'border-muted-foreground'
+                    }`}
+                  />
                   <div>
                     <div className="flex items-center gap-2">
                       <WifiOff className="h-4 w-4" />
                       <span className="font-medium">Dummy Data</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">Use sample workout data for testing</p>
+                    <p className="text-sm text-muted-foreground">
+                      Use sample workout data for testing
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div 
+              <div
                 className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                  dataSource === 'hevy' 
-                    ? 'border-primary bg-primary/5' 
+                  dataSource === 'hevy'
+                    ? 'border-primary bg-primary/5'
                     : 'border-muted hover:border-muted-foreground/30'
                 }`}
                 onClick={() => setDataSource('hevy')}
               >
                 <div className="flex items-center space-x-3">
-                  <div className={`w-4 h-4 rounded-full border-2 ${
-                    dataSource === 'hevy' ? 'border-primary bg-primary' : 'border-muted-foreground'
-                  }`} />
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 ${
+                      dataSource === 'hevy'
+                        ? 'border-primary bg-primary'
+                        : 'border-muted-foreground'
+                    }`}
+                  />
                   <div>
                     <div className="flex items-center gap-2">
                       <Wifi className="h-4 w-4" />
                       <span className="font-medium">Hevy API</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">Connect to your real Hevy workout data</p>
+                    <p className="text-sm text-muted-foreground">
+                      Connect to your real Hevy workout data
+                    </p>
                   </div>
                 </div>
               </div>
@@ -125,11 +132,11 @@ export default function Settings() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                
+
                 <div className="relative">
                   <Input
                     id="api-key"
-                    type={showApiKey ? "text" : "password"}
+                    type={showApiKey ? 'text' : 'password'}
                     placeholder="Enter your Hevy API key..."
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
@@ -142,11 +149,7 @@ export default function Settings() {
                     className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                     onClick={() => setShowApiKey(!showApiKey)}
                   >
-                    {showApiKey ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
@@ -156,7 +159,7 @@ export default function Settings() {
 
         <Card>
           <CardContent>
-            <Button 
+            <Button
               onClick={handleSave}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-2"
@@ -182,5 +185,5 @@ export default function Settings() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
