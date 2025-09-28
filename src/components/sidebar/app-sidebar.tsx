@@ -69,17 +69,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <Separator className="mb-3" />
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:space-y-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:space-x-0">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <button className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-muted rounded-md p-2 transition-colors focus:outline-none cursor-pointer hover:cursor-pointer">
-                <Avatar className="h-8 w-8 shrink-0 bg-muted border">
+              <button className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-muted rounded-md p-2 transition-colors focus:outline-none cursor-pointer hover:cursor-pointer group-data-[collapsible=icon]:flex-none group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:space-x-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:items-center">
+                <Avatar className="h-8 w-8 shrink-0 bg-muted border group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6">
                   <AvatarFallback className="bg-muted-foreground/20 text-foreground">
                     <User className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="flex-1 min-w-0 text-left">
+                <div className="flex-1 min-w-0 text-left group-data-[collapsible=icon]:hidden">
                   <p className="text-sm font-medium truncate">{userName}</p>
                   <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
                 </div>
@@ -124,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0 cursor-pointer hover:cursor-pointer ml-2"
+            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0 cursor-pointer hover:cursor-pointer ml-2 group-data-[collapsible=icon]:ml-0"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
