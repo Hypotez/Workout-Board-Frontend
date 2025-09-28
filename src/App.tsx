@@ -15,14 +15,33 @@ function AppContent() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Layout>
-        <Routes>
-          {Object.values(ROUTES).map((route) => (
-            <Route key={route.path} path={route.path} element={<route.component />} />
-          ))}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path={ROUTES.login.path} element={<ROUTES.login.component />} />
+
+        <Route path={ROUTES.register.path} element={<ROUTES.register.component />} />
+
+        <Route
+          path="/*"
+          element={
+            <Layout>
+              <Routes>
+                <Route path={ROUTES.dashboard.path} element={<ROUTES.dashboard.component />} />
+
+                <Route path={ROUTES.workouts.path} element={<ROUTES.workouts.component />} />
+
+                <Route path={ROUTES.routines.path} element={<ROUTES.routines.component />} />
+
+                <Route path={ROUTES.ai.path} element={<ROUTES.ai.component />} />
+
+                <Route path={ROUTES.settings.path} element={<ROUTES.settings.component />} />
+
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </Layout>
+          }
+        />
+      </Routes>
     </ThemeProvider>
   );
 }

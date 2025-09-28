@@ -6,6 +6,8 @@ import ai from '@/pages/ai';
 import workouts from '@/pages/workouts';
 import routines from '@/pages/routines';
 import settings from '@/pages/settings';
+import login from '@/pages/login';
+import register from '@/pages/register';
 
 interface RoutesInformation {
   path: string;
@@ -50,6 +52,16 @@ export const ROUTES: Routes = {
     path: '/settings',
     title: 'Settings',
     component: settings,
+  },
+  login: {
+    path: '/login',
+    title: 'Login',
+    component: login,
+  },
+  register: {
+    path: '/register',
+    title: 'Register',
+    component: register,
   },
 };
 
