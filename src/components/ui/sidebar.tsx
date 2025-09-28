@@ -61,7 +61,6 @@ function SidebarProvider({
 
       if (sidebarCookie) {
         const value = sidebarCookie.split('=')[1];
-        console.log('Sidebar cookie value:', value);
         return value === 'true';
       }
     }
