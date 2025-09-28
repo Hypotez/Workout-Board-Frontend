@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ModeToggle } from '@/components/darkmode/mode-toggle';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -56,9 +57,18 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-between mb-4">
+            {/* Empty div for spacing */}
+            <div className="w-12"></div>
+
+            {/* Centered logo */}
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Dumbbell className="h-6 w-6" />
+            </div>
+
+            {/* Mode toggle aligned to the right */}
+            <div className="w-12 flex justify-end">
+              <ModeToggle />
             </div>
           </div>
           <CardTitle className="text-2xl text-center">Welcome</CardTitle>
