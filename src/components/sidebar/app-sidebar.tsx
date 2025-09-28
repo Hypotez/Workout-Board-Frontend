@@ -13,9 +13,16 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 import { NavSidebarIcon } from './nav-sidebar-icon';
-
 import { ROUTES_WITH_ICONS } from '@/config/routes';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -23,6 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const [userName] = React.useState('John Doe');
   const [userEmail] = React.useState('john.doe@email.com');
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const handleLogout = () => {
     console.log('Logging out...');
@@ -62,23 +70,61 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <Separator className="mb-3" />
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 flex-1 min-w-0">
-            <Avatar className="h-8 w-8 shrink-0 bg-muted border">
-              <AvatarFallback className="bg-muted-foreground/20 text-foreground">
-                <User className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <button className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-muted rounded-md p-2 transition-colors focus:outline-none cursor-pointer hover:cursor-pointer">
+                <Avatar className="h-8 w-8 shrink-0 bg-muted border">
+                  <AvatarFallback className="bg-muted-foreground/20 text-foreground">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{userName}</p>
-              <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-            </div>
-          </div>
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-sm font-medium truncate">{userName}</p>
+                  <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
+                </div>
+              </button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>User Menu</DialogTitle>
+                <DialogDescription className="sr-only">
+                  Access your profile and account options.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-4">
+                <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback>
+                      <User className="h-6 w-6" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{userName}</p>
+                    <p className="text-sm text-muted-foreground">{userEmail}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer hover:cursor-pointer"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
 
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0 cursor-pointer hover:cursor-pointer"
+            className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0 cursor-pointer hover:cursor-pointer ml-2"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
