@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Dumbbell } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -16,9 +16,11 @@ import {
 } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
+import httpClient from '@/service/httpClient';
+import { CreateUserSchema } from '@/schemas/shared/auth';
 
 export default function Register() {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -41,16 +43,26 @@ export default function Register() {
     setIsLoading(true);
     setError('');
 
-    /*
-    try {
+    const createUser = CreateUserSchema.safeParse({ email, username, password });
 
-    } catch (e) {
-      console.error('Login error:', e);
-      setError('Login failed. Please try again.');
+    if (!createUser.success) {
+      setError('Invalid username, password or email format.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await httpClient('/v1/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(createUser.data),
+      });
+
+      navigate('/dashboard', { replace: true });
+    } catch {
+      setError('Register failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
-    */
   };
 
   return (
