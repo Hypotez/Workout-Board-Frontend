@@ -16,11 +16,13 @@ import {
 } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
+import httpClient from '@/service/httpClient';
+import { LoginUserSchema } from '@/schemas/shared/auth';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('john.doe@email.com');
-  const [password, setPassword] = useState('12ActualPassword34!##');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -40,13 +42,22 @@ export default function Login() {
     setIsLoading(true);
     setError('');
 
+    const loginUser = LoginUserSchema.safeParse({ identifier, password });
+
+    if (!loginUser.success) {
+      setError('Invalid username, email or password format.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      if (email === 'john.doe@email.com' && password === '12ActualPassword34!##') {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/dashboard');
-      }
-    } catch (e) {
-      console.error('Login error:', e);
+      await httpClient('/v1/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(loginUser.data),
+      });
+
+      navigate('/dashboard', { replace: true });
+    } catch {
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -74,21 +85,21 @@ export default function Login() {
           <CardTitle className="text-2xl text-center">Welcome</CardTitle>
           <CardDescription className="text-center">
             Sign in to your Workout Board account. <br />
-            Create an account or use the provided demo user.
+            Create an account first to start.
           </CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="identifier">Email or Username</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
+                id="identifier"
+                name="identifier"
+                type="text"
                 placeholder="john@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 required
                 disabled={isLoading}
               />
