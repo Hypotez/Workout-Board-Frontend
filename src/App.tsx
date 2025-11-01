@@ -1,10 +1,10 @@
 import './App.css';
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from '@/components/layout';
 import { usePageTitle } from '@/hooks/use-page-title';
 import { ROUTES } from '@/config/routes';
 import { ThemeProvider } from '@/components/darkmode/theme-provider';
+import ProtectedRoute from '@/components/protectedRoute';
 
 function AppContent() {
   const pageTitle = usePageTitle();
@@ -17,30 +17,52 @@ function AppContent() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Routes>
         <Route path={ROUTES.login.path} element={<ROUTES.login.component />} />
-
         <Route path={ROUTES.register.path} element={<ROUTES.register.component />} />
 
         <Route
-          path="/*"
+          path={ROUTES.dashboard.path}
           element={
-            <Layout>
-              <Routes>
-                <Route path={ROUTES.dashboard.path} element={<ROUTES.dashboard.component />} />
-
-                <Route path={ROUTES.workouts.path} element={<ROUTES.workouts.component />} />
-
-                <Route path={ROUTES.routines.path} element={<ROUTES.routines.component />} />
-
-                <Route path={ROUTES.ai.path} element={<ROUTES.ai.component />} />
-
-                <Route path={ROUTES.settings.path} element={<ROUTES.settings.component />} />
-
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </Layout>
+            <ProtectedRoute>
+              <ROUTES.dashboard.component />
+            </ProtectedRoute>
           }
         />
+
+        <Route
+          path={ROUTES.workouts.path}
+          element={
+            <ProtectedRoute>
+              <ROUTES.workouts.component />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.routines.path}
+          element={
+            <ProtectedRoute>
+              <ROUTES.routines.component />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ai.path}
+          element={
+            <ProtectedRoute>
+              <ROUTES.ai.component />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.settings.path}
+          element={
+            <ProtectedRoute>
+              <ROUTES.settings.component />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to={ROUTES.login.path} replace />} />
       </Routes>
     </ThemeProvider>
   );

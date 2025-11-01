@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { ReactNode } from 'react';
 
 const emailSchema = z.email();
 const usernameSchema = z.string();
@@ -33,3 +34,8 @@ export const CreateUserSchema = z.object({
   username: usernameSchema,
   password: passwordSchema,
 });
+
+export type ProtectedRouteProps = {
+  children: ReactNode;
+  showLayout?: boolean;
+};
