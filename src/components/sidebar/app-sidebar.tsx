@@ -1,7 +1,7 @@
 import { type ComponentProps, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, LogOut, User } from 'lucide-react';
-
+import httpClient from '@/service/httpClient';
 import {
   Sidebar,
   SidebarContent,
@@ -27,14 +27,23 @@ import { ROUTES_WITH_ICONS } from '@/config/routes';
 import { useUser } from '@/hooks/use-user';
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useUser();
   const userName = user?.username ?? 'John Doe';
   const userEmail = user?.email ?? 'john.doe@email.com';
 
-  const handleLogout = () => {
-    console.log('Logging out...');
+  const handleLogout = async () => {
+    try {
+      await httpClient('/v1/auth/logout', {
+        method: 'POST',
+      });
+
+      navigate('/login', { replace: true });
+    } catch {
+      /* empty */
+    }
   };
 
   return (
