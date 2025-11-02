@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Save, Database, Wifi, WifiOff, HelpCircle, Check } from 'lucide-react';
+import { Save, Database, Wifi, WifiOff, HelpCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,6 @@ type DataSource = 'hevy' | 'dummy';
 export default function Settings() {
   const [dataSource, setDataSource] = useState<DataSource>('dummy');
   const [apiKey, setApiKey] = useState('');
-  const [showApiKey, setShowApiKey] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -136,21 +135,12 @@ export default function Settings() {
                 <div className="relative">
                   <Input
                     id="api-key"
-                    type={showApiKey ? 'text' : 'password'}
+                    type="text"
                     placeholder="Enter your Hevy API key..."
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     className="pr-10"
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent cursor-pointer hover:cursor-pointer"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
                 </div>
               </div>
             </CardContent>
