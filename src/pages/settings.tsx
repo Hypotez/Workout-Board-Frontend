@@ -1,34 +1,58 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Save, Database, Wifi, WifiOff, HelpCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import httpClient from '@/service/httpClient';
+import { SaveSettingsSchema } from '@/schemas/shared/settings';
+import { useSettings } from '@/hooks/use-settings';
 
 type DataSource = 'hevy' | 'dummy';
 
 export default function Settings() {
-  const [dataSource, setDataSource] = useState<DataSource>('dummy');
-  const [apiKey, setApiKey] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { settings, error } = useSettings();
+
   const [isLoading, setIsLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [dataSource, setDataSource] = useState<DataSource>('dummy');
+  const [apiKey, setApiKey] = useState('');
+
+  useEffect(() => {
+    if (settings) {
+      setApiKey(settings.hevy_api_key);
+      setDataSource(settings.use_hevy_api ? 'hevy' : 'dummy');
+    }
+  }, [settings]);
 
   const handleSave = async () => {
     setIsLoading(true);
+    setSaved(false);
 
-    setTimeout(() => {
-      localStorage.setItem('dataSource', dataSource);
+    const hevyApiKey = apiKey === '' ? null : apiKey;
+    const useHevyApi = dataSource === 'hevy';
 
-      if (dataSource === 'hevy') {
-        localStorage.setItem('hevyApiKey', apiKey);
-      }
+    const settings = SaveSettingsSchema.safeParse({
+      hevy_api_key: hevyApiKey,
+      use_hevy_api: useHevyApi,
+    });
 
+    if (!settings.success) {
       setIsLoading(false);
-      setSaved(true);
+      return;
+    }
 
-      setTimeout(() => setSaved(false), 3000);
-    }, 1000);
+    try {
+      await httpClient('/v1/settings', {
+        method: 'POST',
+        body: JSON.stringify(settings.data),
+      });
+      setSaved(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
