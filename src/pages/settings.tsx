@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Save, Database, Wifi, WifiOff, HelpCircle, Check } from 'lucide-react';
+import { Database, Wifi, WifiOff, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,9 +14,6 @@ type DataSource = 'hevy' | 'dummy';
 export default function Settings() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { settings, error } = useSettings();
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [dataSource, setDataSource] = useState<DataSource>('dummy');
   const [apiKey, setApiKey] = useState('');
 
@@ -28,9 +25,6 @@ export default function Settings() {
   }, [settings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    setSaved(false);
-
     const hevyApiKey = apiKey === '' ? null : apiKey;
     const useHevyApi = dataSource === 'hevy';
 
@@ -40,7 +34,6 @@ export default function Settings() {
     });
 
     if (!settings.success) {
-      setIsLoading(false);
       return;
     }
 
@@ -49,9 +42,8 @@ export default function Settings() {
         method: 'POST',
         body: JSON.stringify(settings.data),
       });
-      setSaved(true);
-    } finally {
-      setIsLoading(false);
+    } catch {
+      return;
     }
   };
 
@@ -175,25 +167,9 @@ export default function Settings() {
           <CardContent>
             <Button
               onClick={handleSave}
-              disabled={isLoading}
               className="w-full flex items-center justify-center gap-2 cursor-pointer hover:cursor-pointer"
             >
-              {saved ? (
-                <>
-                  <Check className="h-4 w-4 animate-pulse" />
-                  <span className="animate-pulse">Settings Saved!</span>
-                </>
-              ) : isLoading ? (
-                <>
-                  <Save className="h-4 w-4" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  Save Settings
-                </>
-              )}
+              Save
             </Button>
           </CardContent>
         </Card>
