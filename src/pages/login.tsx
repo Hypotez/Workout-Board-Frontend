@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Dumbbell } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,6 +7,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+
+import { useAutoClearError } from '@/hooks/use-auto-clear-error';
+
 import {
   Card,
   CardContent,
@@ -29,15 +32,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError('');
-      }, 4000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  useAutoClearError(error, setError);
 
   const loginMutation = useMutation({
     mutationFn: async (payload: LoginUserInput) => {

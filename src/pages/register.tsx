@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Dumbbell } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ import { ModeToggle } from '@/components/darkmode/mode-toggle';
 import httpClient from '@/service/httpClient';
 
 import { type CreateUserInput, CreateUserSchema } from '@backend/schemas/shared/auth';
+import { useAutoClearError } from '@/hooks/use-auto-clear-error';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -30,15 +31,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError('');
-      }, 4000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  useAutoClearError(error, setError);
 
   const registerMutation = useMutation({
     mutationFn: async (payload: CreateUserInput) => {
