@@ -1,21 +1,22 @@
 import httpClient from '@/service/httpClient';
-import { useEffect, useState } from 'react';
-import { type PublicUser } from '@/schemas/shared/user';
+import { useQuery } from '@tanstack/react-query';
+import { type PublicUser } from '@backend/schemas/shared/user';
 
 export function useUser() {
-  const [user, setUser] = useState<PublicUser | null>(null);
-
-  useEffect(() => {
-    (async () => {
+  const userQuery = useQuery({
+    queryKey: ['user', 'me'],
+    queryFn: async (): Promise<PublicUser | null> => {
       try {
         const response: PublicUser = await httpClient('/v1/user/me', {
           method: 'GET',
         });
-        setUser(response);
+        return response;
       } catch {
-        setUser(null);
+        return null;
       }
-    })();
-  }, []);
-  return { user };
+    },
+    retry: false,
+  });
+
+  return { user: userQuery.data, isLoading: userQuery.isPending };
 }

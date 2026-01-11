@@ -1,32 +1,39 @@
 import env from '@/config/env';
-import { ApiResponseSchema } from '@/schemas/shared/api';
+import { ErrorResponseSchema } from '@backend/schemas/shared/error';
 
 export default async function httpClient<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${env.VITE_API_URL}${endpoint}`;
+  const headers = new Headers(options.headers);
+
+  if (options.body != undefined && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   const response = await fetch(url, {
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
+    headers,
     ...options,
   });
 
-  const json = await response.json();
-  const parsedJson = ApiResponseSchema.safeParse(json);
+  const contentType = response.headers.get('content-type');
+  const json = contentType?.includes('application/json') ? await response.json() : null;
 
-  if (!parsedJson.success) {
-    throw new Error(parsedJson.error.message);
+  if (!response.ok) {
+    if (json) {
+      const parsedError = ErrorResponseSchema.safeParse(json);
+      if (parsedError.success) {
+        throw new Error(parsedError.data.error);
+      }
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
   }
 
-  const parsedData = parsedJson.data;
-
-  if (parsedData.status === 'error') {
-    throw new Error(parsedData.error || 'Unknown API error');
+  if (!json) {
+    throw new Error('Expected JSON response but none received');
   }
 
-  return parsedData.data as T;
+  return json as T;
 }

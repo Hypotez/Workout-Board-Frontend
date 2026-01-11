@@ -1,21 +1,34 @@
 import { useEffect, useState } from 'react';
 import { Database, Wifi, WifiOff, HelpCircle } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import httpClient from '@/service/httpClient';
-import { SaveSettingsSchema } from '@/schemas/shared/settings';
+import { SettingsSchema, type Settings } from '@backend/schemas/shared/settings';
 import { useSettings } from '@/hooks/use-settings';
 
 type DataSource = 'hevy' | 'dummy';
 
 export default function Settings() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { settings, error } = useSettings();
+  const queryClient = useQueryClient();
+  const { settings } = useSettings();
   const [dataSource, setDataSource] = useState<DataSource>('dummy');
   const [apiKey, setApiKey] = useState('');
+
+  const saveMutation = useMutation({
+    mutationFn: async (payload: Settings) => {
+      await httpClient('/v1/settings', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['settings'] });
+    },
+  });
 
   useEffect(() => {
     if (settings) {
@@ -24,11 +37,11 @@ export default function Settings() {
     }
   }, [settings]);
 
-  const handleSave = async () => {
-    const hevyApiKey = apiKey === '' ? null : apiKey;
+  const handleSave = () => {
+    const hevyApiKey = apiKey;
     const useHevyApi = dataSource === 'hevy';
 
-    const settings = SaveSettingsSchema.safeParse({
+    const settings = SettingsSchema.safeParse({
       hevy_api_key: hevyApiKey,
       use_hevy_api: useHevyApi,
     });
@@ -37,14 +50,7 @@ export default function Settings() {
       return;
     }
 
-    try {
-      await httpClient('/v1/settings', {
-        method: 'POST',
-        body: JSON.stringify(settings.data),
-      });
-    } catch {
-      return;
-    }
+    saveMutation.mutate(settings.data);
   };
 
   return (

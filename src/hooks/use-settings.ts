@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/service/httpClient';
-import { type GetSettings } from '@/schemas/shared/settings';
+import { type Settings } from '@backend/schemas/shared/settings';
 
 export function useSettings() {
-  const [settings, setSettings] = useState<GetSettings | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const settingsQuery = useQuery({
+    queryKey: ['settings'],
+    queryFn: async (): Promise<Settings | null> => {
+      return await httpClient('/v1/settings', {
+        method: 'GET',
+      });
+    },
+    retry: false,
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response: GetSettings | null = await httpClient('/v1/settings', {
-          method: 'GET',
-        });
-
-        setSettings(response);
-      } catch {
-        setError('Failed to fetch settings');
-      }
-    })();
-  }, []);
-  return { settings, error };
+  return {
+    settings: settingsQuery.data,
+    error: settingsQuery.isError ? 'Failed to fetch settings' : null,
+    isLoading: settingsQuery.isPending,
+  };
 }

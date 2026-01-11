@@ -1,6 +1,7 @@
 import { type ComponentProps, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, LogOut, User } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import httpClient from '@/service/httpClient';
 import {
   Sidebar,
@@ -28,22 +29,28 @@ import { useUser } from '@/hooks/use-user';
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { pathname } = useLocation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useUser();
   const userName = user?.username ?? 'John Doe';
   const userEmail = user?.email ?? 'john.doe@email.com';
 
-  const handleLogout = async () => {
-    try {
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
       await httpClient('/v1/auth/logout', {
         method: 'POST',
       });
-
+    },
+    onSuccess: () => {
+      setIsDialogOpen(false);
+      queryClient.clear();
       navigate('/login', { replace: true });
-    } catch {
-      /* empty */
-    }
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   return (

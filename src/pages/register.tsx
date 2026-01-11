@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Dumbbell } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,15 +18,16 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
 import httpClient from '@/service/httpClient';
-import { CreateUserSchema } from '@/schemas/shared/auth';
+
+import { type CreateUserInput, CreateUserSchema } from '@backend/schemas/shared/auth';
 
 export default function Register() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -38,31 +40,36 @@ export default function Register() {
     }
   }, [error]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const registerMutation = useMutation({
+    mutationFn: async (payload: CreateUserInput) => {
+      await httpClient('/v1/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: () => {
+      queryClient.clear();
+      navigate('/dashboard', { replace: true });
+    },
+    onError: () => {
+      setError('Register failed. Please try again.');
+    },
+  });
+
+  const isLoading = registerMutation.isPending;
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
     const createUser = CreateUserSchema.safeParse({ email, username, password });
 
     if (!createUser.success) {
       setError('Invalid username, password or email format.');
-      setIsLoading(false);
       return;
     }
 
-    try {
-      await httpClient('/v1/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(createUser.data),
-      });
-
-      navigate('/dashboard', { replace: true });
-    } catch {
-      setError('Register failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    registerMutation.mutate(createUser.data);
   };
 
   return (

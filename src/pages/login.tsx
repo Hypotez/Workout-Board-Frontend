@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Dumbbell } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,14 +18,15 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
 import httpClient from '@/service/httpClient';
-import { LoginUserSchema } from '@/schemas/shared/auth';
+
+import { LoginUserSchema, type LoginUserInput, emailField } from '@backend/schemas/shared/auth';
 
 export default function Login() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -37,31 +39,42 @@ export default function Login() {
     }
   }, [error]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const loginMutation = useMutation({
+    mutationFn: async (payload: LoginUserInput) => {
+      await httpClient('/v1/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: () => {
+      queryClient.clear();
+      navigate('/dashboard', { replace: true });
+    },
+    onError: () => {
+      setError('Login failed. Please try again.');
+    },
+  });
+
+  const isLoading = loginMutation.isPending;
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
-    const loginUser = LoginUserSchema.safeParse({ identifier, password });
+    const trimmedIdentifier = identifier.trim();
+    const isEmail = emailField.safeParse(trimmedIdentifier).success;
+    const payload: LoginUserInput = isEmail
+      ? { type: 'email', email: trimmedIdentifier, password }
+      : { type: 'username', username: trimmedIdentifier, password };
+
+    const loginUser = LoginUserSchema.safeParse(payload);
 
     if (!loginUser.success) {
       setError('Invalid username, email or password format.');
-      setIsLoading(false);
       return;
     }
 
-    try {
-      await httpClient('/v1/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(loginUser.data),
-      });
-
-      navigate('/dashboard', { replace: true });
-    } catch {
-      setError('Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    loginMutation.mutate(loginUser.data);
   };
 
   return (

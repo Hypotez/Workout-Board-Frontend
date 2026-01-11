@@ -1,10 +1,14 @@
 import './App.css';
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/use-page-title';
 import { ROUTES } from '@/config/routes';
 import { ThemeProvider } from '@/components/darkmode/theme-provider';
 import ProtectedRoute from '@/components/protectedRoute';
+
+const ReactQueryDevtools = lazy(() =>
+  import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtools }))
+);
 
 function AppContent() {
   const pageTitle = usePageTitle();
@@ -64,6 +68,12 @@ function AppContent() {
 
         <Route path="*" element={<Navigate to={ROUTES.login.path} replace />} />
       </Routes>
+
+      {import.meta.env.DEV && (
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Suspense>
+      )}
     </ThemeProvider>
   );
 }

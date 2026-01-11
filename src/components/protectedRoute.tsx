@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/service/httpClient';
 import { Layout } from '@/components/layout';
 
@@ -7,29 +8,27 @@ import type { ProtectedRouteProps } from '@/schemas/shared/auth';
 
 export default function ProtectedRoute({ children, showLayout = true }: ProtectedRouteProps) {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        await httpClient('/v1/auth/validate', {
-          method: 'GET',
-        });
-        setIsAuthenticated(true);
-      } catch {
-        navigate('/login', { replace: true });
-      } finally {
-        setIsLoading(false);
-      }
-    })();
+  const validateQuery = useQuery({
+    queryKey: ['auth', 'validate'],
+    queryFn: async (): Promise<void> => {
+      return await httpClient('/v1/auth/validate', {
+        method: 'GET',
+      });
+    },
   });
 
-  if (isLoading) {
+  useEffect(() => {
+    if (validateQuery.isError) {
+      navigate('/login', { replace: true });
+    }
+  }, [validateQuery.isError, navigate]);
+
+  if (validateQuery.isPending) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (validateQuery.isError) {
     return null;
   }
 
