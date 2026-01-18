@@ -41,9 +41,7 @@ export default function Routines() {
       })) ?? [];
 
   const isFullyLoaded =
-    routinesQuery.isSuccess &&
-    !routinesQuery.hasNextPage &&
-    !routinesQuery.isFetchingNextPage;
+    routinesQuery.isSuccess && !routinesQuery.hasNextPage && !routinesQuery.isFetchingNextPage;
 
   const pagingFailed = routinesQuery.isFetchNextPageError;
 
