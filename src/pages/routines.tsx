@@ -9,12 +9,15 @@ import {
 } from '@/components/ui/pagination';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/config/routes';
 import httpClient from '@/service/httpClient';
 import type { GetRoutinesResponse } from '@backend/schemas/shared/hevy/routine';
 
 export default function Routines() {
   const pageSize = 10;
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const routinesQuery = useQuery<GetRoutinesResponse, Error>({
     queryKey: ['routines', page, pageSize],
@@ -33,8 +36,8 @@ export default function Routines() {
   });
 
   const items: ClickableCardItem[] =
-    routinesQuery.data?.routines.map((routine, index) => ({
-      index,
+    routinesQuery.data?.routines.map((routine) => ({
+      id: routine.id,
       title: routine.title,
       description: `${routine.exercises.length} exercises`,
     })) ?? [];
@@ -66,7 +69,9 @@ export default function Routines() {
           items,
           header: 'Routines',
           description: 'Click any',
-          onItemClick: (item) => alert(`Clicked: ${item.title}`),
+          onItemClick: (item) => {
+            navigate(`${ROUTES.routineDetail.path.replace(':id', item.id)}`);
+          },
         };
 
   const currentPage = routinesQuery.data?.page ?? page;

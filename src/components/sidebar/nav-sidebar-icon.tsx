@@ -16,7 +16,9 @@ export function NavSidebarIcon({ items, currentPath, className }: NavProps) {
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton
             asChild
-            isActive={currentPath === item.path}
+            isActive={
+              currentPath.startsWith(item.path)
+            }
             className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
           >
             <NavLink to={item.path}>

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export type ClickableCardItem = {
-  index: number;
+  id: string;
   title: string;
   description?: string;
 };
@@ -28,7 +28,7 @@ export function ClickableCardList({
       <CardContent className="space-y-4">
         {items.map((item) => (
           <button
-            key={item.index}
+            key={item.id}
             className="w-full text-left p-4 rounded-lg border hover:bg-primary/10 transition-colors cursor-pointer"
             onClick={() => onItemClick?.(item)}
           >

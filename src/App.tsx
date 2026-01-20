@@ -5,6 +5,7 @@ import { usePageTitle } from '@/hooks/use-page-title';
 import { ROUTES } from '@/config/routes';
 import { ThemeProvider } from '@/components/darkmode/theme-provider';
 import ProtectedRoute from '@/components/protectedRoute';
+import RoutineDetail from '@/pages/routine-detail';
 
 const ReactQueryDevtools = lazy(() =>
   import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtools }))
@@ -46,6 +47,14 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <ROUTES.routines.component />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.routineDetail.path}
+          element={
+            <ProtectedRoute>
+              <RoutineDetail />
             </ProtectedRoute>
           }
         />

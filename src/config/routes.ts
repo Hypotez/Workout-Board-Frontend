@@ -8,6 +8,7 @@ import routines from '@/pages/routines';
 import settings from '@/pages/settings';
 import login from '@/pages/login';
 import register from '@/pages/register';
+import routineDetail from '@/pages/routine-detail';
 
 interface RoutesInformation {
   path: string;
@@ -42,6 +43,11 @@ export const ROUTES: Routes = {
     path: '/routines',
     title: 'Routines',
     component: routines,
+  },
+  routineDetail: {
+    path: '/routines/:id',
+    title: 'Routines Detail',
+    component: routineDetail,
   },
   ai: {
     path: '/ai',
@@ -88,9 +94,17 @@ export const ROUTES_WITH_ICONS: RoutesWithIcon = {
   },
 };
 
+const isRouteMatch = (routePath: string, currentPath: string) => {
+  if (routePath.includes(':')) {
+    const pattern = `^${routePath.replace(/:[^/]+/g, '[^/]+')}$`;
+    return new RegExp(pattern).test(currentPath);
+  }
+  return routePath === currentPath;
+};
+
 export const getRouteByPath = (path: string) => {
   for (const key in ROUTES) {
-    if (ROUTES[key].path === path) {
+    if (isRouteMatch(ROUTES[key].path, path)) {
       return ROUTES[key];
     }
   }
