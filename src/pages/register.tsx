@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { showError } from '@/lib/toast';
 import {
   Card,
   CardContent,
@@ -15,12 +16,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
 import httpClient from '@/service/httpClient';
 
 import { type CreateUserInput, CreateUserSchema } from '@backend/schemas/shared/auth';
-import { useAutoClearError } from '@/hooks/use-auto-clear-error';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -29,9 +28,6 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-
-  useAutoClearError(error, setError);
 
   const registerMutation = useMutation({
     mutationFn: async (payload: CreateUserInput) => {
@@ -45,7 +41,7 @@ export default function Register() {
       navigate('/dashboard', { replace: true });
     },
     onError: () => {
-      setError('Register failed. Please try again.');
+      showError('Register failed. Please try again.');
     },
   });
 
@@ -53,12 +49,11 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     const createUser = CreateUserSchema.safeParse({ email, username, password });
 
     if (!createUser.success) {
-      setError('Invalid username, password or email format.');
+      showError('Invalid username, password or email format.');
       return;
     }
 
@@ -151,12 +146,6 @@ export default function Register() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4 pt-6">
-            {error && (
-              <Alert variant="destructive" className="animate-pulse">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
             <Button
               type="submit"
               className="w-full cursor-pointer hover:cursor-pointer"

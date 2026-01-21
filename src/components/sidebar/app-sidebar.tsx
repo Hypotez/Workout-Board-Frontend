@@ -1,7 +1,7 @@
-import { type ComponentProps, useState } from 'react';
+import { type ComponentProps, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, LogOut, User } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import httpClient from '@/service/httpClient';
 import {
   Sidebar,
@@ -25,14 +25,30 @@ import {
 
 import { NavSidebarIcon } from './nav-sidebar-icon';
 import { ROUTES_WITH_ICONS } from '@/config/routes';
-import { useUser } from '@/hooks/use-user';
+import { type PublicUser } from '@backend/schemas/shared/user';
+import { showError } from '@/lib/toast';
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { pathname } = useLocation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user } = useUser();
+  const userQuery = useQuery({
+    queryKey: ['user', 'me'],
+    queryFn: async (): Promise<PublicUser> => {
+      const response: PublicUser = await httpClient('/v1/user/me', {
+        method: 'GET',
+      });
+      return response;
+    }
+  });
+  useEffect(() => {
+    if (userQuery.isError) {
+      showError('Failed to fetch user info. Please try again.');
+    }
+  }, [userQuery.isError]);
+
+  const user = userQuery.data;
   const userName = user?.username ?? 'John Doe';
   const userEmail = user?.email ?? 'john.doe@email.com';
 
@@ -46,6 +62,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       setIsDialogOpen(false);
       queryClient.clear();
       navigate('/login', { replace: true });
+    },
+    onError: () => {
+      showError('Logout failed. Please try again.');
     },
   });
 

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import { useAutoClearError } from '@/hooks/use-auto-clear-error';
+import { showError } from '@/lib/toast';
 
 import {
   Card,
@@ -18,7 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ModeToggle } from '@/components/darkmode/mode-toggle';
 import httpClient from '@/service/httpClient';
 
@@ -30,9 +29,6 @@ export default function Login() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-
-  useAutoClearError(error, setError);
 
   const loginMutation = useMutation({
     mutationFn: async (payload: LoginUserInput) => {
@@ -46,7 +42,7 @@ export default function Login() {
       navigate('/dashboard', { replace: true });
     },
     onError: () => {
-      setError('Login failed. Please try again.');
+      showError('Login failed. Please try again.');
     },
   });
 
@@ -54,7 +50,6 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     const trimmedIdentifier = identifier.trim();
     const isEmail = emailField.safeParse(trimmedIdentifier).success;
@@ -65,7 +60,7 @@ export default function Login() {
     const loginUser = LoginUserSchema.safeParse(payload);
 
     if (!loginUser.success) {
-      setError('Invalid username, email or password format.');
+      showError('Invalid username, email or password format.');
       return;
     }
 
@@ -146,12 +141,6 @@ export default function Login() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4 pt-6">
-            {error && (
-              <Alert variant="destructive" className="animate-pulse">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
             <Button
               type="submit"
               className="w-full cursor-pointer hover:cursor-pointer"

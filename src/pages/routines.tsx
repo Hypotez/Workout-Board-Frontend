@@ -8,11 +8,12 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes';
 import httpClient from '@/service/httpClient';
 import type { GetRoutinesResponse } from '@backend/schemas/shared/hevy/routine';
+import { showError } from '@/lib/toast';
 
 export default function Routines() {
   const pageSize = 10;
@@ -29,10 +30,7 @@ export default function Routines() {
       return await httpClient<GetRoutinesResponse>(`/v1/routines?${query.toString()}`, {
         method: 'GET',
       });
-    },
-    retry: 3,
-    refetchOnMount: 'always',
-    placeholderData: (previousData) => previousData,
+    }
   });
 
   const items: ClickableCardItem[] =
@@ -48,6 +46,12 @@ export default function Routines() {
 
   const errorMessage = routinesQuery.error?.message ?? 'Failed to load routines.';
 
+  useEffect(() => {
+    if (isError) {
+      showError(errorMessage);
+    }
+  }, [isError]);
+
   const listProps: {
     items: ClickableCardItem[];
     header: string;
@@ -57,7 +61,7 @@ export default function Routines() {
     ? {
         items: [],
         header: 'Routines',
-        description: errorMessage,
+        description: '',
       }
     : isLoading
       ? {

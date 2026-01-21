@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Database, Wifi, WifiOff, HelpCircle } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,13 +8,20 @@ import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import httpClient from '@/service/httpClient';
 import { SettingsSchema, type Settings } from '@backend/schemas/shared/settings';
-import { useSettings } from '@/hooks/use-settings';
+import { showError } from '@/lib/toast';
 
 type DataSource = 'hevy' | 'dummy';
 
 export default function Settings() {
   const queryClient = useQueryClient();
-  const { settings } = useSettings();
+  const settingsQuery = useQuery({
+    queryKey: ['settings'],
+    queryFn: async (): Promise<Settings | null> => {
+      return await httpClient('/v1/settings', {
+        method: 'GET',
+      });
+    }
+  });
   const [dataSource, setDataSource] = useState<DataSource>('dummy');
   const [apiKey, setApiKey] = useState('');
 
@@ -28,14 +35,23 @@ export default function Settings() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['settings'] });
     },
+    onError: () => {
+      showError('Failed to save settings. Please try again.');
+    },
   });
 
   useEffect(() => {
-    if (settings) {
-      setApiKey(settings.hevy_api_key);
-      setDataSource(settings.use_hevy_api ? 'hevy' : 'dummy');
+    if (settingsQuery.isError) {
+      showError('Failed to fetch settings. Please try again.');
     }
-  }, [settings]);
+  }, [settingsQuery.isError]);
+
+  useEffect(() => {
+    if (settingsQuery.data) {
+      setApiKey(settingsQuery.data.hevy_api_key);
+      setDataSource(settingsQuery.data.use_hevy_api ? 'hevy' : 'dummy');
+    }
+  }, [settingsQuery.data]);
 
   const handleSave = () => {
     const hevyApiKey = apiKey;

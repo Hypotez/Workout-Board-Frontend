@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { usePageTitle } from '@/hooks/use-page-title';
 import { ROUTES } from '@/config/routes';
 import { ThemeProvider } from '@/components/darkmode/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import ProtectedRoute from '@/components/protectedRoute';
 import RoutineDetail from '@/pages/routine-detail';
 
@@ -83,6 +84,8 @@ function AppContent() {
           <ReactQueryDevtools initialIsOpen={false} />
         </Suspense>
       )}
+
+      <Toaster position="bottom-center" richColors closeButton />
     </ThemeProvider>
   );
 }

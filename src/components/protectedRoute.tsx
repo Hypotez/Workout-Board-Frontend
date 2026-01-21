@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/service/httpClient';
 import { Layout } from '@/components/layout';
+import { showError } from '@/lib/toast';
 
 import type { ProtectedRouteProps } from '@/schemas/shared/auth';
 
@@ -20,6 +21,7 @@ export default function ProtectedRoute({ children, showLayout = true }: Protecte
 
   useEffect(() => {
     if (validateQuery.isError) {
+      showError('Session expired. Please log in again.');
       navigate('/login', { replace: true });
     }
   }, [validateQuery.isError, navigate]);
