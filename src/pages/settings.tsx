@@ -40,6 +40,8 @@ export default function Settings() {
     },
   });
 
+  const isSaving = saveMutation.isPending;
+
   useEffect(() => {
     if (settingsQuery.isError) {
       showError('Failed to fetch settings. Please try again.');
@@ -190,8 +192,9 @@ export default function Settings() {
             <Button
               onClick={handleSave}
               className="w-full flex items-center justify-center gap-2 cursor-pointer hover:cursor-pointer"
+              disabled={isSaving}
             >
-              Save
+              {isSaving ? 'Saving...' : 'Save'}
             </Button>
           </CardContent>
         </Card>
