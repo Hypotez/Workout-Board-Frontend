@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/pagination';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes';
 import httpClient from '@/service/httpClient';
 import type { GetRoutinesResponse } from '@backend/schemas/shared/hevy/routine';
@@ -19,6 +19,7 @@ export default function Routines() {
   const pageSize = 10;
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const routinesQuery = useQuery<GetRoutinesResponse, Error>({
     queryKey: ['routines', page, pageSize],
@@ -74,7 +75,9 @@ export default function Routines() {
           header: 'Routines',
           description: 'Click any',
           onItemClick: (item) => {
-            navigate(`${ROUTES.routineDetail.path.replace(':id', item.id)}`);
+            navigate(`${ROUTES.routineDetail.path.replace(':id', item.id)}`, {
+              state: { from: `${location.pathname}` },
+            });
           },
         };
 

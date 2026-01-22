@@ -34,6 +34,7 @@ export default function Settings() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['settings'] });
+      await queryClient.invalidateQueries({ queryKey: ['routines'] });
     },
     onError: () => {
       showError('Failed to save settings. Please try again.');

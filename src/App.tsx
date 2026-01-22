@@ -6,6 +6,7 @@ import { ROUTES } from '@/config/routes';
 import { ThemeProvider } from '@/components/darkmode/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import ProtectedRoute from '@/components/protectedRoute';
+import { BackLinkProvider } from '@/components/navigation/back-link';
 import RoutineDetail from '@/pages/routine-detail';
 
 const ReactQueryDevtools = lazy(() =>
@@ -55,7 +56,9 @@ function AppContent() {
           path={ROUTES.routineDetail.path}
           element={
             <ProtectedRoute>
-              <RoutineDetail />
+              <BackLinkProvider fallbackPath={ROUTES.routines.path} label="Back to Routines">
+                <RoutineDetail />
+              </BackLinkProvider>
             </ProtectedRoute>
           }
         />
