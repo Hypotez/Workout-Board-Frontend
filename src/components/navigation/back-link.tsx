@@ -1,48 +1,36 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 interface BackLinkContextValue {
   fallbackPath: string;
-  label: string;
 }
 
 const BackLinkContext = createContext<BackLinkContextValue | null>(null);
 
 interface BackLinkProviderProps {
   fallbackPath: string;
-  label?: string;
   children: ReactNode;
 }
 
-interface BackLinkState {
-  from?: string;
-}
-
-export function BackLinkProvider({ fallbackPath, label = 'Back', children }: BackLinkProviderProps) {
+export function BackLinkProvider({ fallbackPath, children }: BackLinkProviderProps) {
   return (
-    <BackLinkContext.Provider value={{ fallbackPath, label }}>
+    <BackLinkContext.Provider value={{ fallbackPath }}>
       {children}
     </BackLinkContext.Provider>
   );
 }
 
-interface BackButtonProps {
-  fallbackPath?: string;
-  label?: string;
-}
-
-export function BackButton({ fallbackPath, label }: BackButtonProps) {
-  const location = useLocation();
+export function BackButton() {
   const context = useContext(BackLinkContext);
-  const state = location.state as BackLinkState | null;
-
-  const target = state?.from ?? fallbackPath ?? context?.fallbackPath ?? '/';
-  const buttonLabel = label ?? context?.label ?? 'Back';
+  const target = context?.fallbackPath ?? '/';
 
   return (
-    <Button asChild variant="outline">
-      <Link to={target}>{buttonLabel}</Link>
+    <Button asChild variant="outline" size="icon" aria-label="Back">
+      <Link to={target}>
+        <ArrowLeft className="size-4" />
+      </Link>
     </Button>
   );
 }

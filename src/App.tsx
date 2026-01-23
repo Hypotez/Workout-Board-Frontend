@@ -56,7 +56,7 @@ function AppContent() {
           path={ROUTES.routineDetail.path}
           element={
             <ProtectedRoute>
-              <BackLinkProvider fallbackPath={ROUTES.routines.path} label="Back to Routines">
+              <BackLinkProvider fallbackPath={ROUTES.routines.path}>
                 <RoutineDetail />
               </BackLinkProvider>
             </ProtectedRoute>
