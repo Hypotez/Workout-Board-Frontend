@@ -88,7 +88,7 @@ function AppContent() {
         </Suspense>
       )}
 
-      <Toaster position="bottom-center" richColors closeButton />
+      <Toaster position="bottom-right" richColors closeButton />
     </ThemeProvider>
   );
 }
